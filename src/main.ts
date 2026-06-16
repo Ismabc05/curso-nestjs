@@ -1,3 +1,4 @@
+// este es el punto inicial de la aplicacion, aqui se levanta el servidor y se inicializa la aplicacion
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
