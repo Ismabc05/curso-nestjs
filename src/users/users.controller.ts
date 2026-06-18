@@ -30,7 +30,7 @@ export class UsersController {
   @Post()
   createUser(@Body() body: { name: string; email: string }) {
     const newUser: User = {
-      id: (this.users.length + 1).toString(),
+      id: `${new Date().getTime()}`, // Genera un ID único basado en la marca de tiempo actual
       name: body.name,
       email: body.email,
     };
@@ -38,6 +38,15 @@ export class UsersController {
     if (!newUser.name || !newUser.email) {
       return { error: 'Name and email are required' };
     }
+
+    if (newUser.name.length < 3) {
+      return { error: 'Name must be at least 3 characters long' };
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
+      return { error: 'Invalid email format' };
+    }
+
     this.users.push(newUser);
     return newUser;
   }
@@ -48,6 +57,15 @@ export class UsersController {
     if (!user) {
       return { error: 'User not found' };
     }
+
+    if (body.name && body.name.length < 3) {
+      return { error: 'Name must be at least 3 characters long' };
+    }
+
+    if (body.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+      return { error: 'Invalid email format' };
+    }
+
     if (body.name) {
       user.name = body.name;
     }
