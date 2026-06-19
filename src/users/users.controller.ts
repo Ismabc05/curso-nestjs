@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, NotFoundException, Param, Post, Put, UnprocessableEntityException } from '@nestjs/common';
 
 interface User {
   id: string;
@@ -22,7 +22,11 @@ export class UsersController {
   findUser(@Param('id') id: string) {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
-      return { error: 'User not found' };
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    if (user.id === '1') {
+      throw new ForbiddenException(`You are not allowed to access this user`);
     }
     return user;
   }
@@ -36,15 +40,15 @@ export class UsersController {
     };
 
     if (!newUser.name || !newUser.email) {
-      return { error: 'Name and email are required' };
+      throw new UnprocessableEntityException(`Name and email are required`);
     }
 
     if (newUser.name.length < 3) {
-      return { error: 'Name must be at least 3 characters long' };
+      throw new UnprocessableEntityException(`Name must be at least 3 characters long`);
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
-      return { error: 'Invalid email format' };
+      throw new UnprocessableEntityException(`Invalid email format`);
     }
 
     this.users.push(newUser);
@@ -55,15 +59,15 @@ export class UsersController {
   updateUser(@Param('id') id: string, @Body() body: { name?: string; email?: string }) {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
-      return { error: 'User not found' };
+      throw new NotFoundException(`User with id ${id} not found`);
     }
 
     if (body.name && body.name.length < 3) {
-      return { error: 'Name must be at least 3 characters long' };
+      throw new UnprocessableEntityException(`Name must be at least 3 characters long`);
     }
 
     if (body.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
-      return { error: 'Invalid email format' };
+      throw new UnprocessableEntityException(`Invalid email format`);
     }
 
     if (body.name) {
@@ -79,7 +83,7 @@ export class UsersController {
   deleteUser(@Param('id') id: string) {
     const position = this.users.findIndex((user) => user.id === id);
     if (position === -1) {
-      return { error: 'User not found' };
+      throw new NotFoundException(`User with id ${id} not found`);
     }
     this.users.splice(position, 1); // eliminame esa posición del array y solamente elimina un elemento
     return { message: 'User deleted successfully' };
