@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, ForbiddenException, Get, NotFoundException, Param, Post, Put, UnprocessableEntityException } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 
 interface User {
   id: string;
@@ -32,42 +33,22 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() body: { name: string; email: string }) {
+  createUser(@Body() body: CreateUserDto) {
     const newUser: User = {
       id: `${new Date().getTime()}`, // Genera un ID único basado en la marca de tiempo actual
       name: body.name,
       email: body.email,
     };
 
-    if (!newUser.name || !newUser.email) {
-      throw new UnprocessableEntityException(`Name and email are required`);
-    }
-
-    if (newUser.name.length < 3) {
-      throw new UnprocessableEntityException(`Name must be at least 3 characters long`);
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
-      throw new UnprocessableEntityException(`Invalid email format`);
-    }
-
     this.users.push(newUser);
     return newUser;
   }
 
   @Put(':id')
-  updateUser(@Param('id') id: string, @Body() body: { name?: string; email?: string }) {
+  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
-    }
-
-    if (body.name && body.name.length < 3) {
-      throw new UnprocessableEntityException(`Name must be at least 3 characters long`);
-    }
-
-    if (body.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
-      throw new UnprocessableEntityException(`Invalid email format`);
     }
 
     if (body.name) {
