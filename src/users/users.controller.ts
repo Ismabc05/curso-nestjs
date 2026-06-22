@@ -1,72 +1,32 @@
-import { Body, Controller, Delete, ForbiddenException, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  private users: User[] = [
-    { id: '1', name: 'John Doe', email: 'john.doe@example.com' },
-    { id: '2', name: 'Jane Smith', email: 'jane.smith@example.com' },
-  ];
-
+  constructor(private usersService: UsersService) {}
   @Get()
   getUsers() {
-    return this.users;
+    return this.usersService.findAll();
   }
 
   @Get(':id')
   findUser(@Param('id') id: string) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
-
-    if (user.id === '1') {
-      throw new ForbiddenException(`You are not allowed to access this user`);
-    }
-    return user;
+    return this.usersService.getUserById(id);
   }
 
   @Post()
   createUser(@Body() body: CreateUserDto) {
-    const newUser: User = {
-      id: `${new Date().getTime()}`, // Genera un ID único basado en la marca de tiempo actual
-      name: body.name,
-      email: body.email,
-    };
-
-    this.users.push(newUser);
-    return newUser;
+    return this.usersService.create(body);
   }
 
   @Put(':id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
-
-    if (body.name) {
-      user.name = body.name;
-    }
-    if (body.email) {
-      user.email = body.email;
-    }
-    return user;
+    return this.usersService.update(id, body);
   }
 
   @Delete(':id')
   deleteUser(@Param('id') id: string) {
-    const position = this.users.findIndex((user) => user.id === id);
-    if (position === -1) {
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
-    this.users.splice(position, 1); // eliminame esa posición del array y solamente elimina un elemento
-    return { message: 'User deleted successfully' };
+    return this.usersService.delete(id);
   }
 }

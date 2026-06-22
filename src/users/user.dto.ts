@@ -13,13 +13,12 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto {
-  @IsOptional() // Permite que el campo sea opcional
-  @IsString() // Asegura que el nombre sea una cadena de texto
-  @IsNotEmpty() // Asegura que el nombre no esté vacío
+  @IsOptional()
+  @IsString()
   name?: string;
 
-  @IsOptional() // Permite que el campo sea opcional
-  @IsEmail() // Asegura que el correo electrónico tenga un formato válido
-  @IsString() // Asegura que el correo electrónico sea una cadena de texto
+  @IsOptional()
+  @IsEmail()
+  @IsString()
   email?: string;
 }
