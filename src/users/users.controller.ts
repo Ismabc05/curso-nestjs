@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService) {} // Inyección de la dependencia del servicio de usuarios
   @Get()
   getUsers() {
     return this.usersService.findAll();

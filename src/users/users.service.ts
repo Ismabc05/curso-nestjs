@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/commo
 import { User } from './user.model';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 
-@Injectable()
+@Injectable() // El decorador @Injectable() marca esta clase como un proveedor que puede ser inyectado en otros componentes de NestJS, como controladores o servicios.
 export class UsersService {
   private users: User[] = [
     { id: '1', name: 'John Doe', email: 'john.doe@example.com' },
