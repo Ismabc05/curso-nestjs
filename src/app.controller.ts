@@ -14,7 +14,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    const myVar = this.configService.get('MY_VAR', { infer: true }); // Accedemos a la variable de entorno MY_VAR
+    const myVar = this.configService.get('MY_VAR', { infer: true }); // Accedemos a la variable de entorno MY_VAR, infer true para que TypeScript infiera el tipo de la variable
     const message = this.appService.getHello();
     return `${message} - MY_VAR: ${myVar}`;
   }

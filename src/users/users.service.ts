@@ -15,7 +15,7 @@ export class UsersService {
 
   getUserById(id: string) {
     const userIndex = this.findOne(id);
-    const user = this.users[userIndex];
+    const user = this.users[userIndex]; // busca el usuario en el arreglo de usuarios utilizando el índice encontrado
     if (user.id === '1') {
       throw new ForbiddenException(`You are not allowed to access this user`);
     }

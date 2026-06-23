@@ -2,3 +2,6 @@
   "extends": "./tsconfig.json",
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }
+
+// Este archivo es una extensión de tsconfig.json que se utiliza específicamente cuando se construye la aplicación (npm run build).
+// Su función es indicar qué archivos NO deben incluirse en la compilación final
