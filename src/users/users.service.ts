@@ -1,62 +1,55 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { User } from './user.model';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entitites/user.entity';
 
 @Injectable() // El decorador @Injectable() marca esta clase como un proveedor que puede ser inyectado en otros componentes de NestJS, como controladores o servicios.
 export class UsersService {
-  private users: User[] = [
-    { id: '1', name: 'John Doe', email: 'john.doe@example.com' },
-    { id: '2', name: 'Jane Smith', email: 'jane.smith@example.com' },
-  ];
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
-  findAll() {
-    return this.users;
+  async findAll() {
+    return await this.usersRepository.find(); // trae todos los usuarios
   }
 
-  getUserById(id: string) {
-    const userIndex = this.findOne(id);
-    const user = this.users[userIndex]; // busca el usuario en el arreglo de usuarios utilizando el índice encontrado
-    if (user.id === '1') {
+  async getUserById(id: number) {
+    const user = await this.findOne(id);
+    if (user.id === 1) {
       throw new ForbiddenException(`You are not allowed to access this user`);
     }
     return user;
   }
 
-  create(body: CreateUserDto) {
-    const newUser: User = {
-      id: `${new Date().getTime()}`,
-      name: body.name,
-      email: body.email,
-    };
-    this.users.push(newUser);
-    return newUser;
+  async create(body: CreateUserDto) {
+    try {
+      const newUser = await this.usersRepository.save(body);
+      return newUser;
+    } catch {
+      throw new BadRequestException('Error creating user');
+    }
   }
 
-  update(id: string, body: UpdateUserDto) {
-    const userIndex = this.findOne(id);
-    const user = this.users[userIndex];
-    if (body.name) {
-      user.name = body.name;
-    }
-    if (body.email) {
-      user.email = body.email;
-    }
-
-    return user;
+  async update(id: number, body: UpdateUserDto) {
+    const user = await this.findOne(id);
+    const updateUser = this.usersRepository.merge(user, body);
+    return this.usersRepository.save(updateUser);
   }
 
-  delete(id: string) {
-    const userIndex = this.findOne(id);
-    this.users.splice(userIndex, 1);
+  async delete(id: number) {
+    const user = await this.findOne(id);
+    await this.usersRepository.delete(user.id);
     return { message: 'User deleted successfully' };
   }
 
-  private findOne(id: string) {
+  private async findOne(id: number) {
     // sirve para reusar la lógica de encontrar un usuario por id y lanzar una excepción si no se encuentra
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex === -1) {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
-    return userIndex;
+    return user;
   }
 }

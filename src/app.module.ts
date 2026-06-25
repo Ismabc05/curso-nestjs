@@ -18,6 +18,8 @@ import { Env } from './env.model';
         username: configService.get('POSTGRES_USER', { infer: true }),
         password: configService.get('POSTGRES_PASSWORD', { infer: true }),
         database: configService.get('POSTGRES_DB', { infer: true }),
+        autoLoadEntities: true,
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
