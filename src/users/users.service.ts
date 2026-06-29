@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './dtos/user.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entitites/user.entity';
@@ -12,7 +12,9 @@ export class UsersService {
   ) {}
 
   async findAll() {
-    return await this.usersRepository.find(); // trae todos los usuarios
+    return await this.usersRepository.find({
+      relations: { profile: true },
+    }); // trae todos los usuarios
   }
 
   async getUserById(id: number) {
@@ -21,6 +23,11 @@ export class UsersService {
       throw new ForbiddenException(`You are not allowed to access this user`);
     }
     return user;
+  }
+
+  async getProfileById(id: number) {
+    const user = await this.findOne(id);
+    return user.profile;
   }
 
   async create(body: CreateUserDto) {
@@ -33,20 +40,31 @@ export class UsersService {
   }
 
   async update(id: number, body: UpdateUserDto) {
-    const user = await this.findOne(id);
-    const updateUser = this.usersRepository.merge(user, body); // actualiza user con body y lo guarda en la base de datos
-    return this.usersRepository.save(updateUser);
+    try {
+      const user = await this.findOne(id);
+      const updateUser = this.usersRepository.merge(user, body); // actualiza user con body y lo guarda en la base de datos
+      const savedUser = await this.usersRepository.save(updateUser);
+      return savedUser;
+    } catch {
+      throw new BadRequestException('Error updating user');
+    }
   }
 
   async delete(id: number) {
-    const user = await this.findOne(id);
-    await this.usersRepository.delete(user.id);
-    return { message: 'User deleted successfully' };
+    try {
+      await this.usersRepository.delete(id);
+      return { message: 'User deleted successfully' };
+    } catch {
+      throw new BadRequestException('Error deleting user');
+    }
   }
 
   private async findOne(id: number) {
     // sirve para reusar la lógica de encontrar un usuario por id y lanzar una excepción si no se encuentra
-    const user = await this.usersRepository.findOneBy({ id });
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      relations: { profile: true },
+    });
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
