@@ -1,8 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, IsOptional, MinLength, ValidateNested } from 'class-validator';
 
-// Un DTO en NestJS es una clase que representa la estructura de los datos que espera un endpoint, y mediante decoradores puedes declarar las reglas de validación para evitar hacer comprobaciones manuales.
-
 export class CreateProfileDto {
   @IsString()
   @IsNotEmpty()
@@ -18,16 +16,16 @@ export class CreateProfileDto {
 }
 
 export class CreateUserDto {
-  @IsString() // Asegura que el nombre sea una cadena de texto
-  @IsNotEmpty() // Asegura que el nombre no esté vacío
+  @IsString()
+  @IsNotEmpty()
   @MinLength(8)
   password!: string;
 
-  @IsEmail() // Asegura que el correo electrónico tenga un formato válido
-  @IsString() // Asegura que el correo electrónico sea una cadena de texto
+  @IsEmail()
+  @IsString()
   email!: string;
 
-  @ValidateNested()
+  @ValidateNested() // le decimos que va a validar un objeto anidado
   @Type(() => CreateProfileDto)
   @IsNotEmpty()
   profile!: CreateProfileDto;

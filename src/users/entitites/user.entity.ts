@@ -18,7 +18,7 @@ export class User {
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' }) // se actualiza automaticamente la fecha de actualización
   updatedAt!: Date;
 
-  @OneToOne(() => Profile, { nullable: false, cascade: true })
+  @OneToOne(() => Profile, { nullable: false, cascade: true }) // con cascade todas las operaciones que hagamos user tambien se hace con profile, como por ejemplo si creamos un usuario automaticamente se crea su perfil.
   @JoinColumn({ name: 'profile_id' })
   profile!: Profile;
 }

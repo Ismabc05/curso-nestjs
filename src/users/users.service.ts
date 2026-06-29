@@ -34,7 +34,7 @@ export class UsersService {
 
   async update(id: number, body: UpdateUserDto) {
     const user = await this.findOne(id);
-    const updateUser = this.usersRepository.merge(user, body);
+    const updateUser = this.usersRepository.merge(user, body); // actualiza user con body y lo guarda en la base de datos
     return this.usersRepository.save(updateUser);
   }
 
