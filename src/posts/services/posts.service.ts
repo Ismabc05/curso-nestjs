@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './entities/post.entity';
+import { CreatePostDto } from '../dto/create-post.dto';
+import { UpdatePostDto } from '../dto/update-post.dto';
+import { Post } from '../entities/post.entity';
 
 @Injectable()
 export class PostsService {
@@ -32,7 +32,7 @@ export class PostsService {
         ...body,
         user: { id: body.userId },
       });
-      return await this.findOne(newPost.id);
+      return await this.findOne(newPost.id); // devuelve el post creado con el usuario y su perfil
     } catch {
       throw new BadRequestException('Error creating post');
     }

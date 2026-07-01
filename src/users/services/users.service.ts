@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './dtos/user.dto';
+import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entitites/user.entity';
+import { User } from '../entitites/user.entity';
 
 @Injectable() // El decorador @Injectable() marca esta clase como un proveedor que puede ser inyectado en otros componentes de NestJS, como controladores o servicios.
 export class UsersService {
@@ -28,6 +28,11 @@ export class UsersService {
   async getProfileById(id: number) {
     const user = await this.findOne(id);
     return user.profile;
+  }
+
+  async getPostsByUserId(id: number) {
+    const user = await this.findOne(id);
+    return user.posts;
   }
 
   async create(body: CreateUserDto) {
