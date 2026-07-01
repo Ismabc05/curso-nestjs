@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Profile } from './profile.entity';
+import { Post } from '../../posts/entities/post.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -21,4 +22,8 @@ export class User {
   @OneToOne(() => Profile, { nullable: false, cascade: true }) // con cascade todas las operaciones que hagamos user tambien se hace con profile, como por ejemplo si creamos un usuario automaticamente se crea su perfil.
   @JoinColumn({ name: 'profile_id' })
   profile!: Profile;
+
+  @OneToMany(() => Post, (post) => post.user, { nullable: true }) // un usuario puede tener muchos posts
+  @JoinColumn({ name: 'user_id' })
+  posts!: Post[];
 }

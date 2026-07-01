@@ -13,11 +13,13 @@ export class PostsService {
   ) {}
 
   async findAll() {
-    return await this.postsRepository.find();
+    return await this.postsRepository.find({
+      relations: { user: { profile: true } },
+    });
   }
 
   async findOne(id: number) {
-    const post = await this.postsRepository.findOne({ where: { id } });
+    const post = await this.postsRepository.findOne({ where: { id }, relations: { user: { profile: true } } });
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found`);
     }
@@ -26,8 +28,11 @@ export class PostsService {
 
   async create(body: CreatePostDto) {
     try {
-      const newPost = await this.postsRepository.save(body);
-      return newPost;
+      const newPost = await this.postsRepository.save({
+        ...body,
+        user: { id: body.userId },
+      });
+      return await this.findOne(newPost.id);
     } catch {
       throw new BadRequestException('Error creating post');
     }

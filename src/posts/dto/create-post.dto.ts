@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -19,4 +19,8 @@ export class CreatePostDto {
   @IsOptional()
   @IsUrl()
   coverImage?: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  userId!: number;
 }

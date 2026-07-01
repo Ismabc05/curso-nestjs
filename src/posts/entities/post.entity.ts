@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from '../../users/entitites/user.entity';
 
 @Entity({ name: 'posts' })
 export class Post {
@@ -25,4 +26,8 @@ export class Post {
 
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' }) // se actualiza automaticamente la fecha de actualización
   updatedAt!: Date;
+
+  @ManyToOne(() => User, (user) => user.posts, { nullable: false })
+  @JoinColumn({ name: 'user_id' }) // se crea la columna user_id en la tabla posts, que hace referencia a la tabla users
+  user!: User;
 }
