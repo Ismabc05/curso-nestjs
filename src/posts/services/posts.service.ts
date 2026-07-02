@@ -14,12 +14,21 @@ export class PostsService {
 
   async findAll() {
     return await this.postsRepository.find({
-      relations: { user: { profile: true } },
+      relations: {
+        user: { profile: true },
+        categories: true,
+      },
     });
   }
 
   async findOne(id: number) {
-    const post = await this.postsRepository.findOne({ where: { id }, relations: { user: { profile: true } } });
+    const post = await this.postsRepository.findOne({
+      where: { id },
+      relations: {
+        user: { profile: true },
+        categories: true,
+      },
+    });
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found`);
     }
@@ -31,6 +40,7 @@ export class PostsService {
       const newPost = await this.postsRepository.save({
         ...body,
         user: { id: body.userId },
+        categories: body.categoryIds?.map((id) => ({ id })) || [], // crea un array de objetos con la propiedad id para cada categoría, si no hay categorías, se asigna un array vacío
       });
       return await this.findOne(newPost.id); // devuelve el post creado con el usuario y su perfil
     } catch {

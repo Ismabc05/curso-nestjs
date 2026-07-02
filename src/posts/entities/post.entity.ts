@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { User } from '../../users/entitites/user.entity';
+import { Category } from './category.entity';
 
 @Entity({ name: 'posts' })
 export class Post {
@@ -30,4 +31,12 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts, { nullable: false }) // muchos posts pueden pertenecer a un usuario, user.posts es la propiedad que hace referencia a los posts del usuario
   @JoinColumn({ name: 'user_id' }) /// esta es la colummna que se crea como foreign key en la tabla posts.
   user!: User;
+
+  @ManyToMany(() => Category, (category) => category.posts) // muchos posts pueden tener muchas categorias, category.posts es la propiedad que hace referencia a los posts de la categoria
+  @JoinTable({
+    name: 'posts_categories', // nombre de la tabla intermedia
+    joinColumn: { name: 'post_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
+  })
+  categories!: Category[];
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -23,4 +23,9 @@ export class CreatePostDto {
   @IsNotEmpty()
   @IsNumber()
   userId!: number;
+
+  @IsArray()
+  @IsNumber({}, { each: true }) // cada elemento del array debe ser un número
+  @IsOptional()
+  categoryIds?: number[];
 }
