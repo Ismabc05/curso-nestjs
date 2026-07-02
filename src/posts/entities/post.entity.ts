@@ -27,7 +27,7 @@ export class Post {
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' }) // se actualiza automaticamente la fecha de actualización
   updatedAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.posts, { nullable: false })
-  @JoinColumn({ name: 'user_id' }) // se crea la columna user_id en la tabla posts, que hace referencia a la tabla users
+  @ManyToOne(() => User, (user) => user.posts, { nullable: false }) // muchos posts pueden pertenecer a un usuario, user.posts es la propiedad que hace referencia a los posts del usuario
+  @JoinColumn({ name: 'user_id' }) /// esta es la colummna que se crea como foreign key en la tabla posts.
   user!: User;
 }

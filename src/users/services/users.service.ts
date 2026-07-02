@@ -13,7 +13,10 @@ export class UsersService {
 
   async findAll() {
     return await this.usersRepository.find({
-      relations: { profile: true },
+      relations: {
+        profile: true,
+        posts: true,
+      },
     }); // trae todos los usuarios
   }
 
@@ -31,8 +34,10 @@ export class UsersService {
   }
 
   async getPostsByUserId(id: number) {
-    const user = await this.findOne(id);
-    return user.posts;
+    return await this.usersRepository.findOne({
+      where: { id },
+      relations: { posts: true },
+    });
   }
 
   async create(body: CreateUserDto) {

@@ -23,7 +23,6 @@ export class User {
   @JoinColumn({ name: 'profile_id' })
   profile!: Profile;
 
-  @OneToMany(() => Post, (post) => post.user, { nullable: true }) // un usuario puede tener muchos posts
-  @JoinColumn({ name: 'user_id' })
+  @OneToMany(() => Post, (post) => post.user, { nullable: true }) // un usuario puede tener muchos posts, post.user es la propiedad que hace referencia al usuario del post
   posts!: Post[];
 }
