@@ -17,7 +17,7 @@ export class Post {
   coverImage?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  summary!: string;
+  summary?: string;
 
   @Column({ type: 'boolean', default: true, name: 'is_draft' })
   isDraft!: boolean;

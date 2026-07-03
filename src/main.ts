@@ -6,10 +6,11 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
+    // Habilita de forma global las validaciones de los DTOS.
     new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
+      whitelist: true, // whitelist: elimina propiedades que no estan definidas en los DTOs.
+      forbidNonWhitelisted: true, // forbidNonWhitelisted: lanza un error si se envian propiedades que no estan definidas en los DTOs.
+      transform: true, // convierte automáticamente los datos al tipo definido en el DTO.
     }),
   );
   await app.listen(process.env.PORT ?? 3000);
