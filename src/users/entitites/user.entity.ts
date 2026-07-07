@@ -1,6 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany, BeforeInsert } from 'typeorm';
 import { Profile } from './profile.entity';
 import { Post } from '../../posts/entities/post.entity';
+import { Exclude } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'users' })
 export class User {
@@ -10,6 +12,7 @@ export class User {
   @Column({ type: 'varchar', length: 100, unique: true })
   email!: string;
 
+  @Exclude()
   @Column({ type: 'varchar', length: 100 })
   password!: string;
 
@@ -25,4 +28,9 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user, { nullable: true }) // un usuario puede tener muchos posts, post.user es la propiedad que hace referencia al usuario del post
   posts!: Post[];
+
+  @BeforeInsert() // antes de insertar el usuario en la base de datos, hasheamos la contraseña
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, 10); // hasheamos la contraseña antes de guardarla en la base de datos
+  }
 }

@@ -1,3 +1,4 @@
+// Este modulo es el modulo principal de la aplicacion, aqui se importan todos los modulos que se van a usar en la aplicacion, ademas de configurar la conexion a la base de datos y las variables de entorno
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config/dist/config.module';
 import { UsersModule } from './users/users.module';
