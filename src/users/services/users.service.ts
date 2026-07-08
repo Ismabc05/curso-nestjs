@@ -44,7 +44,7 @@ export class UsersService {
     try {
       const newUser = this.usersRepository.create(body);
       const savedUser = await this.usersRepository.save(newUser);
-      return this.findOne(savedUser.id); // para que me traiga el usuario con su perfil y posts
+      return this.findOne(savedUser.id);
     } catch {
       throw new BadRequestException('Error creating user');
     }
