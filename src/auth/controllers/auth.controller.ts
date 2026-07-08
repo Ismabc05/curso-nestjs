@@ -1,12 +1,19 @@
 import { Controller, Post, Req, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
+import { AuthService } from '../services/auth.service';
+import { User } from '../../users/entitites/user.entity';
 
 @Controller('auth')
 export class AuthController {
-  @UseGuards(AuthGuard('local')) // Usa la strategia de autenticación 'local' para proteger la ruta de inicio de sesión
+  constructor(private readonly authService: AuthService) {}
+  @UseGuards(AuthGuard('local'))
   @Post('login')
   login(@Req() req: Request) {
-    return req.user;
+    const user = req.user as User;
+    return {
+      user,
+      access_token: this.authService.generateJwtToken(user),
+    };
   }
 }
