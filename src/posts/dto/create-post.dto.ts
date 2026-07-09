@@ -19,10 +19,6 @@ export class CreatePostDto {
   @IsOptional()
   coverImage?: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  userId!: number;
-
   @IsArray()
   @IsNumber({}, { each: true }) // cada elemento del array debe ser un número
   @IsOptional()

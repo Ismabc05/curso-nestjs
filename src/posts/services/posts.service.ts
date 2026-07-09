@@ -35,11 +35,11 @@ export class PostsService {
     return post;
   }
 
-  async create(body: CreatePostDto) {
+  async create(body: CreatePostDto, userId: number) {
     try {
       const newPost = await this.postsRepository.save({
         ...body,
-        user: { id: body.userId },
+        user: { id: userId },
         categories: body.categoryIds?.map((id) => ({ id })) || [], // crea un array de objetos con la propiedad id para cada categoría, si no hay categorías, se asigna un array vacío
       });
       return await this.findOne(newPost.id); // devuelve el post creado con el usuario y su perfil
