@@ -10,6 +10,7 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   login(@Req() req: Request) {
+    // la request es lo que el guardian devuelve, en este caso el usuario
     const user = req.user as User;
     return {
       user,
