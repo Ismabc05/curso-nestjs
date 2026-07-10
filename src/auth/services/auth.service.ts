@@ -26,6 +26,6 @@ export class AuthService {
 
   generateJwtToken(user: User) {
     const payload: Payload = { sub: user.id }; // esto es lo que se va a guardar en el token
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload); // genera el token con el payload
   }
 }

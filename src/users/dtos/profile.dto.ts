@@ -16,4 +16,4 @@ export class CreateProfileDto {
   avatar?: string;
 }
 
-export class UpdateProfileDto extends PartialType(CreateProfileDto) {} // con PartialType tenemos una cipi de create profile dto pero con el decorador isoptional para hacer las validacions del put
+export class UpdateProfileDto extends PartialType(CreateProfileDto) {}

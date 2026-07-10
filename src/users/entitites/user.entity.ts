@@ -16,10 +16,10 @@ export class User {
   @Column({ type: 'varchar', length: 100 })
   password!: string;
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' }) // se crea automaticamente la fecha de creación
+  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' }) // se actualiza automaticamente la fecha de actualización
+  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' })
   updatedAt!: Date;
 
   @OneToOne(() => Profile, { nullable: false, cascade: true }) // con cascade todas las operaciones que hagamos user tambien se hace con profile, como por ejemplo si creamos un usuario automaticamente se crea su perfil.

@@ -1,6 +1,6 @@
 // este es el punto inicial de la aplicacion, aqui se levanta el servidor y se inicializa la aplicacion
 import { NestFactory, Reflector } from '@nestjs/core';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'; // Habilita de forma globar las validaciones de los DTOS.
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
