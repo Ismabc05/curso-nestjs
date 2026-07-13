@@ -4,12 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
 import { Post } from '../entities/post.entity';
+import { OpenaiService } from '../../ai/services/openai.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(Post)
     private postsRepository: Repository<Post>,
+    private openaiService: OpenaiService,
   ) {}
 
   async findAll() {
@@ -77,5 +79,24 @@ export class PostsService {
       },
     });
     return posts;
+  }
+
+  async publish(id: number, userId: number) {
+    const post = await this.findOne(id);
+    if (post.user.id !== userId) {
+      throw new BadRequestException('You are not the owner of this post');
+    }
+    if (!post.content || !post.title || !post.categories.length) {
+      throw new BadRequestException('Post content, title, and at least one category are required to publish the post');
+    }
+    const summary = await this.openaiService.generateSummary(post.content);
+    const image = await this.openaiService.generateImage(summary);
+    const changes = this.postsRepository.merge(post, {
+      isDraft: false,
+      summary,
+      coverImage: image,
+    });
+    const updatedPost = await this.postsRepository.save(changes);
+    return await this.findOne(updatedPost.id);
   }
 }
