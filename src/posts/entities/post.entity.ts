@@ -1,30 +1,39 @@
 import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { User } from '../../users/entitites/user.entity';
 import { Category } from './category.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'posts' })
 export class Post {
+  @ApiProperty({ description: 'The id of the post' })
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @ApiProperty({ description: 'The title of the post' })
   @Column({ type: 'varchar', length: 255 })
   title!: string;
 
+  @ApiProperty({ description: 'The content of the post' })
   @Column({ type: 'text', nullable: true })
   content?: string;
 
+  @ApiProperty({ description: 'The description of the post' })
   @Column({ type: 'varchar', length: 800, name: 'cover_image', nullable: true })
   coverImage?: string;
 
+  @ApiProperty({ description: 'The summary of the post' })
   @Column({ type: 'varchar', length: 255, nullable: true })
   summary?: string;
 
+  @ApiProperty({ description: 'The draft of the post' })
   @Column({ type: 'boolean', default: true, name: 'is_draft' })
   isDraft!: boolean;
 
+  @ApiProperty({ description: 'The create date of the post' })
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' }) // se crea automaticamente la fecha de creación
   createdAt!: Date;
 
+  @ApiProperty({ description: 'The update date of the post' })
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' }) // se actualiza automaticamente la fecha de actualización
   updatedAt!: Date;
 

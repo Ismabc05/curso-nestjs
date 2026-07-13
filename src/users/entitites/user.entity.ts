@@ -3,22 +3,28 @@ import { Profile } from './profile.entity';
 import { Post } from '../../posts/entities/post.entity';
 import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'users' })
 export class User {
+  @ApiProperty({ description: 'The id of the user' })
   @PrimaryGeneratedColumn() // se auto incrementa el id
   id!: number;
 
+  @ApiProperty({ description: 'The email of the user' })
   @Column({ type: 'varchar', length: 100, unique: true })
   email!: string;
 
+  @ApiProperty({ description: 'The password of the user' })
   @Exclude()
   @Column({ type: 'varchar', length: 100 })
   password!: string;
 
+  @ApiProperty({ description: 'The create date of the user' })
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
   createdAt!: Date;
 
+  @ApiProperty({ description: 'The update date of the user' })
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP', name: 'updated_at' })
   updatedAt!: Date;
 
