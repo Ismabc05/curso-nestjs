@@ -25,6 +25,9 @@ import { AiModule } from './ai/ai.module';
         username: configService.get('POSTGRES_USER', { infer: true }),
         password: configService.get('POSTGRES_PASSWORD', { infer: true }),
         database: configService.get('POSTGRES_DB', { infer: true }),
+        ssl: {
+          rejectUnauthorized: false,
+        },
         autoLoadEntities: true,
         synchronize: false,
       }),
