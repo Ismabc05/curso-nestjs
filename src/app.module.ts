@@ -19,12 +19,10 @@ import { AiModule } from './ai/ai.module';
       // Conectamos typeorm con nuestra base de datos para poder interactuar sobre ella
       useFactory: (configService: ConfigService<Env>) => ({
         type: 'postgres',
-        host: configService.get('POSTGRES_HOST', { infer: true }),
-        // infer:true sirve para decirle que use el tipo env
-        port: configService.get('POSTGRES_PORT', { infer: true }),
-        username: configService.get('POSTGRES_USER', { infer: true }),
-        password: configService.get('POSTGRES_PASSWORD', { infer: true }),
-        database: configService.get('POSTGRES_DB', { infer: true }),
+        url: configService.get('DATABASE_URL', { infer: true }),
+        ssl: {
+          rejectUnauthorized: false,
+        },
         autoLoadEntities: true,
         synchronize: false,
       }),
